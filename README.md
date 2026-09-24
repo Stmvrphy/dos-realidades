@@ -2,16 +2,18 @@
 
 Ejercicio 02 del curso (DPPI 2026), sobre visión artificial y representación. La idea era tomar una sola cámara y usarla para armar dos maneras completamente distintas de "ver" lo mismo.
 
-**Demo:** https://fefeliperoar.github.io/dos-realidades/
-**Repo:** https://github.com/fefeliperoar/dos-realidades
+**Demo:** https://stmvrphy.github.io/dos-realidades/
+**Repo:** https://github.com/Stmvrphy/dos-realidades
 
 ## De qué se trata
 
-Hay dos sistemas corriendo al mismo tiempo, con la misma cámara. Ninguno de los dos muestra la imagen de la cámara tal cual — cada uno se queda solo con el dato que le importa y lo dibuja a su manera. Por eso terminan pareciendo dos cosas distintas aunque estén mirando lo mismo.
+Hay dos sistemas corriendo al mismo tiempo, con la misma cámara. Ninguno de los dos muestra la imagen de la cámara tal cual — cada uno se queda solo con el dato que le importa y lo dibuja a su manera. Por eso terminan pareciendo dos cosas distintas aunque estén mirando exactamente la misma escena.
 
-**Sistema A — Visión Corporal.** Usa MediaPipe para encontrar los puntos del cuerpo de la persona (hombros, codos, caderas, rodillas, etc.) en cada frame. En vez de mostrar esos puntos tal cual, se dibujan conectados por líneas curvas que se mueven levemente solas, como si fueran un tejido vivo en lugar de un esqueleto rígido. Cada zona del cuerpo (cabeza, torso, brazos, piernas) tiene su propio color, y los puntos se ven más grandes o más chicos según qué tan segura está la detección y qué tan cerca está esa parte del cuerpo de la cámara. Si no hay nadie en cuadro, en el centro aparecen unos anillos suaves pulsando, como si el sistema estuviera "buscando" un cuerpo.
+**Sistema A — Visión de Manos.** Usa MediaPipe para rastrear la anatomía de las manos en cada frame. En vez de dibujar un esqueleto con líneas, el sistema despoja a la mano de cualquier rasgo reconocible y representa cada articulación únicamente como puntos blancos flotando en la oscuridad, con un tamaño ampliado que los hace parecer constelaciones mínimas. Cuando no hay manos en cuadro, en el centro aparecen unos anillos dorados pulsando, como si la máquina estuviera esperando pacientemente que alguien entre en escena. Mientras corre el temporizador de un minuto, este sistema cuenta cuántas veces suben, bajan o se desplazan las manos, y registra si los dedos se abren, se cierran o permanecen activos.
 
-**Sistema B — Movimiento.** Este no reconoce cuerpos ni nada en particular: solo compara cada frame con el anterior y se fija dónde cambió el brillo de la imagen. Donde detecta un cambio, nacen partículas — mientras más brusco fue el cambio, más partículas aparecen, más rápido se mueven y más grandes son. El color también cuenta algo: los cambios suaves se ven en tonos azules/violetas y los cambios bruscos en tonos naranjos. Las partículas se van apagando solas con el tiempo y dejan una especie de estela, en vez de desaparecer de golpe.
+**Sistema B — Movimiento.** Este no reconoce manos ni figuras humanas: solo compara cada frame con el anterior y detecta dónde varió el brillo en el espacio. Donde algo cambia, nacen partículas cuadradas que conservan una estela visible durante dos segundos antes de desvanecerse. La velocidad del cambio define su color: los movimientos sutiles o lentos se tiñen de azul, las variaciones intermedias se vuelven amarillas, y los gestos rápidos o drásticos se encienden en un rojo intenso.
+
+Al finalizar el minuto, ambos sistemas dialogan en el **Índice de Expresividad Manual (IEM)**, combinando la velocidad de las manos y la intensidad del movimiento para entregarte una lectura técnica de cómo contaste tu historia sin palabras: si fue un relato Pasivo, Contenido, Neutro, Animado o Muy Expresivo.
 
 ## Cómo probarlo
 
