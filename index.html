@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Dos realidades — Visión artificial</title>
+<meta name="description" content="Una misma cámara, dos sistemas de visión artificial construyendo representaciones distintas de la misma escena.">
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+</head>
+<body>
+
+<div class="page-bg" aria-hidden="true"></div>
+
+<!-- Hero: h1 + botones -->
+<div class="hero">
+  <p class="eyebrow">EJERCICIO_02_DPPI_2026</p>
+  <div class="hero-body">
+    <div class="hero-text">
+      <h1>Cuentame una historia</h1>
+    </div>
+    <div class="hero-controls">
+      <div class="btn-wrapper" id="cameraBtnWrapper">
+        <button class="btn" id="startBtn" type="button">
+          <span class="btn-txt">Cámara</span>
+          <div class="dot" id="cameraDot"></div>
+        </button>
+      </div>
+      <div class="btn-wrapper" id="timerBtnWrapper">
+        <button class="btn" id="timerBtn" type="button">
+          <span class="btn-txt">Temporizador</span>
+          <div class="dot" id="timerDot"></div>
+        </button>
+      </div>
+      <div class="timer-countdown" id="timerCountdown" aria-live="polite"></div>
+    </div>
+  </div>
+  <p id="statusMsg" class="status" role="status" aria-live="polite">La cámara aún no está activa.</p>
+</div>
+
+<!-- Marco de instrucción independiente -->
+<div class="instruction-frame">
+  <p class="instruction-text">Cuentame una historia frente a la cámara en un minuto. Ocupa tus manos como expresión para ver que nos cuentas sin palabras.</p>
+</div>
+
+<main>
+
+  <section class="stage" id="stage">
+
+    <!-- Columna A: MediaPipe + Gráficos -->
+    <div class="stage-col" id="stageColA">
+
+      <article class="panel" id="panelA">
+        <div class="panel-head"><h2>Sistema A — Visión de Manos</h2></div>
+        <div class="canvas-wrap">
+          <video id="video" playsinline autoplay muted width="640" height="480"></video>
+          <canvas id="canvasA" width="640" height="480"></canvas>
+          <p class="idle-hint" id="idleHintA">esperando manos…</p>
+        </div>
+        <p class="caption">MediaPipe Hands · <span id="statA">sin datos</span></p>
+      </article>
+
+      <article class="panel" id="panelCharts">
+        <div class="panel-head"><h2>Cuantificación de Movimiento</h2></div>
+
+        <!-- Gráfico 1: Dirección -->
+        <div class="gesture-category cat-dir">
+          <div class="category-header">
+            <span class="category-dot"></span>
+            <h3>Dirección y Movimiento de Manos</h3>
+            <span class="category-status" id="dirStatus">—</span>
+          </div>
+          <div class="vchart-box">
+            <div class="vchart-y-axis">
+              <span id="dirYMax">—</span>
+              <span id="dirY75">—</span>
+              <span id="dirY50">—</span>
+              <span id="dirY25">—</span>
+              <span>0</span>
+            </div>
+            <div class="vchart-plot">
+              <div class="vchart-grid">
+                <div class="vgrid-line" style="bottom:100%"></div>
+                <div class="vgrid-line" style="bottom:75%"></div>
+                <div class="vgrid-line" style="bottom:50%"></div>
+                <div class="vgrid-line" style="bottom:25%"></div>
+                <div class="vgrid-line" style="bottom:0%"></div>
+              </div>
+              <div class="vchart-bars">
+                <div class="vbar-item" title="Subidas de mano">
+                  <span class="vbar-count" id="dirUpCount">0</span>
+                  <div class="vbar-track"><div class="vbar-fill" id="dirUpFill"></div></div>
+                  <span class="vbar-label">↑</span>
+                </div>
+                <div class="vbar-item" title="Bajadas de mano">
+                  <span class="vbar-count" id="dirDownCount">0</span>
+                  <div class="vbar-track"><div class="vbar-fill" id="dirDownFill"></div></div>
+                  <span class="vbar-label">↓</span>
+                </div>
+                <div class="vbar-item" title="Movimientos izquierda">
+                  <span class="vbar-count" id="dirLeftCount">0</span>
+                  <div class="vbar-track"><div class="vbar-fill" id="dirLeftFill"></div></div>
+                  <span class="vbar-label">←</span>
+                </div>
+                <div class="vbar-item" title="Movimientos derecha">
+                  <span class="vbar-count" id="dirRightCount">0</span>
+                  <div class="vbar-track"><div class="vbar-fill" id="dirRightFill"></div></div>
+                  <span class="vbar-label">→</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="vchart-axis-info">
+            <span class="axis-lbl-y">▲ repeticiones</span>
+            <span class="axis-lbl-x">↑ Subidas · ↓ Bajadas · ← Izq. · → Der. ►</span>
+          </div>
+        </div>
+
+        <!-- Gráfico 2: Dedos -->
+        <div class="gesture-category cat-fgr">
+          <div class="category-header">
+            <span class="category-dot"></span>
+            <h3>Actividad y Estado de Dedos</h3>
+            <span class="category-status" id="fgrStatus">—</span>
+          </div>
+          <div class="vchart-box">
+            <div class="vchart-y-axis">
+              <span id="fgrYMax">—</span>
+              <span id="fgrY75">—</span>
+              <span id="fgrY50">—</span>
+              <span id="fgrY25">—</span>
+              <span>0</span>
+            </div>
+            <div class="vchart-plot">
+              <div class="vchart-grid">
+                <div class="vgrid-line" style="bottom:100%"></div>
+                <div class="vgrid-line" style="bottom:75%"></div>
+                <div class="vgrid-line" style="bottom:50%"></div>
+                <div class="vgrid-line" style="bottom:25%"></div>
+                <div class="vgrid-line" style="bottom:0%"></div>
+              </div>
+              <div class="vchart-bars">
+                <div class="vbar-item" title="Aperturas de mano">
+                  <span class="vbar-count" id="fgrOpensCount">0</span>
+                  <div class="vbar-track"><div class="vbar-fill" id="fgrOpensFill"></div></div>
+                  <span class="vbar-label">✋</span>
+                </div>
+                <div class="vbar-item" title="Cierres de mano">
+                  <span class="vbar-count" id="fgrClosesCount">0</span>
+                  <div class="vbar-track"><div class="vbar-fill" id="fgrClosesFill"></div></div>
+                  <span class="vbar-label">✊</span>
+                </div>
+                <div class="vbar-item" title="Movimiento de dedos extendidos">
+                  <span class="vbar-count" id="fgrMovingCount">0</span>
+                  <div class="vbar-track"><div class="vbar-fill" id="fgrMovingFill"></div></div>
+                  <span class="vbar-label">🤚</span>
+                </div>
+                <div class="vbar-item" title="Promedio de dedos extendidos">
+                  <span class="vbar-count" id="fgrAvgCount">0.0</span>
+                  <div class="vbar-track"><div class="vbar-fill" id="fgrAvgFill"></div></div>
+                  <span class="vbar-label">∅</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="vchart-axis-info">
+            <span class="axis-lbl-y">▲ repeticiones / prom.</span>
+            <span class="axis-lbl-x">✋ Abre · ✊ Cierra · 🤚 Mov. · ∅ Prom. ►</span>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <!-- Columna B: OpenCV + IEM -->
+    <div class="stage-col" id="stageColB">
+
+      <article class="panel" id="panelB">
+        <div class="panel-head"><h2>Sistema B — Movimiento</h2></div>
+        <div class="canvas-wrap">
+          <canvas id="canvasB" width="640" height="480"></canvas>
+        </div>
+        <p class="caption">Diferencia de frames · <span id="statB">sin datos</span></p>
+      </article>
+
+      <article class="panel" id="panelIEM">
+        <div class="panel-head"><h2>Índice de Expresividad Manual (IEM)</h2></div>
+        <div class="iem-display">
+          <div class="iem-score-row">
+            <span class="iem-value" id="iemValue">0</span>
+            <span class="iem-denom">/100</span>
+          </div>
+          <div class="iem-bar-outer">
+            <div class="iem-bar-inner" id="iemBarFill"></div>
+          </div>
+          <div class="iem-category" id="iemCategory">PASIVO</div>
+          <p class="iem-note">Se activa con el temporizador</p>
+        </div>
+        <!-- Niveles de Rapidez de Movimiento (Sistema B) -->
+        <div class="iem-motion-box">
+          <div class="iem-motion-title">Rapidez de Movimiento (Sistema B)</div>
+          <div class="iem-motion-badges">
+            <div class="iem-mbadge mbadge-low" title="Movimientos leves (Azul)">
+              <span class="mbadge-dot"></span>
+              <span class="mbadge-lbl">Bajo</span>
+              <span class="mbadge-val" id="iemMotLow">0%</span>
+            </div>
+            <div class="iem-mbadge mbadge-mid" title="Movimientos moderados (Amarillo)">
+              <span class="mbadge-dot"></span>
+              <span class="mbadge-lbl">Medio</span>
+              <span class="mbadge-val" id="iemMotMid">0%</span>
+            </div>
+            <div class="iem-mbadge mbadge-high" title="Movimientos rápidos (Rojo)">
+              <span class="mbadge-dot"></span>
+              <span class="mbadge-lbl">Alto</span>
+              <span class="mbadge-val" id="iemMotHigh">0%</span>
+            </div>
+          </div>
+        </div>
+        <div class="iem-weights">
+          <div class="iem-w-row"><span class="iem-w-label">Movimiento general</span><span class="iem-w-pct">20%</span></div>
+          <div class="iem-w-row"><span class="iem-w-label">Subidas / Bajadas</span><span class="iem-w-pct">15%</span></div>
+          <div class="iem-w-row"><span class="iem-w-label">Izq. / Der.</span><span class="iem-w-pct">15%</span></div>
+          <div class="iem-w-row"><span class="iem-w-label">Abrir / Cerrar</span><span class="iem-w-pct">15%</span></div>
+          <div class="iem-w-row"><span class="iem-w-label">Variación dedos</span><span class="iem-w-pct">10%</span></div>
+          <div class="iem-w-row"><span class="iem-w-label">Velocidad / Intensidad</span><span class="iem-w-pct">25%</span></div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- Marco de resultado (aparece al terminar el temporizador) -->
+  <section class="panel result-panel" id="panelResult" hidden>
+    <p class="result-header">contaste tu historia:</p>
+    <p class="result-category" id="resultCategory">NEUTRO</p>
+    <ul class="result-metrics" id="resultMetrics"></ul>
+  </section>
+
+  <!-- Reflexión -->
+  <section class="reflection-section">
+    <h2>Reflexión</h2>
+    <p>
+      Frente a la cámara ocurre una sola escena, pero cada sistema encuentra algo distinto en ella. Uno mapea la geometría de las manos y las transforma en nodos y vectores; el otro detecta las variaciones de movimiento y contraste en el espacio. Ninguno está equivocado, pero ninguno puede abarcar la totalidad del gesto.
+    </p>
+    <p>
+      Langdon Winner explicaba que los artefactos técnicos encarnan formas de ver y ordenar el mundo. Con las computadoras ocurre algo similar: aquello que pueden interpretar de nuestra comunicación depende de la estructura técnica que les hemos dado y de los datos que hemos decidido enseñarles a priorizar.
+    </p>
+    <p>
+      Merleau-Ponty nos recuerda que el lenguaje no vive solo en la abstracción de las palabras, sino en la encarnación de nuestro cuerpo en el mundo. Extendemos el sentido de lo que decimos a través del movimiento de las manos, proyectando intenciones que trascienden el texto. Los puntos y los flujos ópticos de un algoritmo intentan atrapar esa gesticulación, pero jamás podrán capturar la vivencia del gesto que acompaña a la voz.
+    </p>
+    <p>
+      Tal vez lo fascinante de construir una tecnología que observa nuestros gestos no sea preguntarnos cuánto logra codificar, sino comenzar a reconocer toda esa dimensión expresiva y humana que, inevitablemente, se le escapa.
+    </p>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <p>Código fuente: <a id="repoLink" href="https://github.com/fefeliperoar/dos-realidades" target="_blank" rel="noopener">repositorio en GitHub</a></p>
+  <p class="credit">Noelia Landaburu, Sebastian Urquiza - Ejercicio 02 - DPPI 2026 - Escuela de Diseño UDP</p>
+</footer>
+
+<canvas id="hiddenSample" width="48" height="36"></canvas>
+<script type="module" src="script.js"></script>
+</body>
+</html>
