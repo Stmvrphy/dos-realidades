@@ -25,17 +25,17 @@ y entrar a `http://localhost:8000`. Va a pedir permiso de cámara — hay que ac
 
 ## Reflexión
 
-Frente a la cámara ocurre una sola escena, pero cada sistema encuentra algo distinto en ella. Uno reconoce un cuerpo a través de puntos y relaciones; el otro simplemente observa dónde algo cambia. Ninguno está equivocado, pero ninguno puede verlo todo.
+Frente a la cámara ocurre una sola escena, pero cada sistema encuentra algo distinto en ella. Uno mapea la geometría de las manos y las transforma en nodos y vectores; el otro detecta las variaciones de movimiento y contraste en el espacio. Ninguno está equivocado, pero ninguno puede abarcar la totalidad del gesto.
 
-Merleau-Ponty planteaba que nuestra percepción está ligada a las posibilidades y límites de nuestro cuerpo. Con las máquinas ocurre algo parecido: aquello que pueden percibir depende de cómo fueron construidas y de qué les enseñamos a buscar.
+Langdon Winner explicaba que los artefactos técnicos encarnan formas de ver y ordenar el mundo. Con las computadoras ocurre algo similar: aquello que pueden interpretar de nuestra comunicación depende de la estructura técnica que les hemos dado y de los datos que hemos decidido enseñarles a priorizar.
 
-Kosuth, por otro lado, nos permite recordar que una representación nunca es aquello que representa. Los puntos, las líneas y las huellas de movimiento hablan de una persona, pero no son esa persona.
+Merleau-Ponty nos recuerda que el lenguaje no vive solo en la abstracción de las palabras, sino en la encarnación de nuestro cuerpo en el mundo. Extendemos el sentido de lo que decimos a través del movimiento de las manos, proyectando intenciones que trascienden el texto. Los puntos y los flujos ópticos de un algoritmo intentan atrapar esa gesticulación, pero jamás podrán capturar la vivencia del gesto que acompaña a la voz.
 
-Tal vez lo interesante de construir una máquina que observa no sea preguntarnos cuánto puede ver, sino comenzar a reconocer todo aquello que, inevitablemente, deja fuera.
+Tal vez lo fascinante de construir una tecnología que observa nuestros gestos no sea preguntarnos cuánto logra codificar, sino comenzar a reconocer toda esa dimensión expresiva y humana que, inevitablemente, se le escapa.
 
 ## Tecnologías
 
 MediaPipe Pose Landmarker (cargado desde CDN) y Canvas 2D con JavaScript puro, sin frameworks ni build.
 
 ---
-Felipe · Ejercicio 02 — Dos realidades · DPPI 2026
+Noelia Landaburu, Sebastian Urquiza · Ejercicio 02 — Dos realidades · DPPI 2026
